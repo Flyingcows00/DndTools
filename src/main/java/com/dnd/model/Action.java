@@ -1,5 +1,7 @@
 package com.dnd.model;
 
+import com.dnd.model.enums.Dice;
+
 import java.util.Map;
 
 public class Action {

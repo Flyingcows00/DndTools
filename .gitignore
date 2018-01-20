@@ -165,5 +165,5 @@ buildNumber.properties
 
 
 # Custom
-.
 .idea/**
+*.iml

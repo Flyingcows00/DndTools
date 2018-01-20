@@ -1,4 +1,4 @@
-package com.dnd.model;
+package com.dnd.model.enums;
 
 public enum Alignment {
 
