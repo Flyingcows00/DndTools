@@ -1,8 +1,15 @@
+import com.dnd.model.Monster;
+import com.dnd.model.enums.Ability;
+import com.dnd.model.enums.Skill;
+import com.google.gson.*;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -19,4 +26,34 @@ public class UnitTest {
         pw.println(sb.toString());
         pw.close();
     }
+
+    @Test
+    public void jsonToMonster() throws IOException {
+        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+        JsonParser parser = new JsonParser();
+        String json = FileUtils.readFileToString(new File(this.getClass().getResource("/monster.txt").getFile()));
+        JsonObject jsonObject = parser.parse(json).getAsJsonObject();
+
+        Monster monster = gson.fromJson(json, Monster.class);
+
+        for (Ability a : Ability.values()) {
+            JsonElement ability = jsonObject.get(a.name().toLowerCase());
+            JsonElement saving = jsonObject.get(a.name().toLowerCase() + "_save");
+            if (ability != null) {
+                monster.addAbility(a.name(), ability.getAsInt());
+            }
+            if (saving != null) {
+                monster.addSavingThrow(a.name(), saving.getAsInt());
+            }
+        }
+
+        for (Skill s : Skill.values()) {
+            JsonElement skill = jsonObject.get(s.name().toLowerCase());
+            if (skill != null) {
+                monster.addSkill(s.name(), skill.getAsInt());
+            }
+        }
+        System.out.println(monster);
+    }
+
 }
