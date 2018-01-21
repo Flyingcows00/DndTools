@@ -69,4 +69,8 @@ public class UnitTest {
         System.out.println(monster);
     }
 
+    @Test
+    public void name() {
+        dao.createMonster(new Monster());
+    }
 }
