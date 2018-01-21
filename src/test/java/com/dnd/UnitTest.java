@@ -3,6 +3,7 @@ package com.dnd;
 import com.dnd.dao.MonsterDao;
 import com.dnd.model.Monster;
 import com.dnd.model.enums.Ability;
+import com.dnd.model.enums.DamageType;
 import com.dnd.model.enums.Skill;
 import com.google.gson.*;
 import org.apache.commons.io.FileUtils;
@@ -19,7 +20,11 @@ import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -41,7 +46,7 @@ public class UnitTest {
     }
 
     @Test
-    public void jsonToMonster() throws IOException {
+    public void jsonToMonster() throws IOException, SQLException {
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
         JsonParser parser = new JsonParser();
         String json = FileUtils.readFileToString(new File(this.getClass().getResource("/monster.txt").getFile()));
@@ -66,11 +71,15 @@ public class UnitTest {
                 monster.addSkill(s.name(), skill.getAsInt());
             }
         }
-        System.out.println(monster);
+//        System.out.println(monster);
+        dao.createMonster(monster);
     }
 
     @Test
     public void name() {
-        dao.createMonster(new Monster());
+        List<DamageType> list = new ArrayList<>();
+        list.add(null);
+        List<String> result = list.stream().filter(a -> a != null).map(Enum::name).collect(Collectors.toList());
+        System.out.println(result);
     }
 }

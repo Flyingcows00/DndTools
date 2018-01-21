@@ -1,0 +1,1 @@
+INSERT INTO ability_levels(monster_id,strength,dexterity,constitution,wisdom,intelligence,charisma) VALUES(:monster_id,:strength,:dexterity,:constitution,:wisdom,:intelligence,:charisma);

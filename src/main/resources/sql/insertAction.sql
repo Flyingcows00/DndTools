@@ -1,0 +1,1 @@
+INSERT INTO action(monster_id,damage_bonus,damage_dice,attack_bonus,desc,name) VALUES(:monster_id,:damage_bonus,:damage_dice,:attack_bonus,:desc,:name);
