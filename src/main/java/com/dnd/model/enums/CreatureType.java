@@ -35,7 +35,7 @@ public enum CreatureType {
 
     public static CreatureType getCreatureType(String type) {
         try {
-            return CreatureType.valueOf(type.trim().replaceAll("[//s]+", " ").toUpperCase());
+            return CreatureType.valueOf(type.trim().replaceAll("[//s]+", "_").toUpperCase());
         } catch (IllegalArgumentException | NullPointerException e) {
             return null;
         }

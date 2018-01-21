@@ -1,1 +1,0 @@
-INSERT INTO saving_throws(monster_id,strength,dexterity,constitution,wisdom,intelligence,charisma) VALUES(:monster_id,:strength,:dexterity,:constitution,:wisdom,:intelligence,:charisma);

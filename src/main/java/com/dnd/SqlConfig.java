@@ -18,21 +18,6 @@ public class SqlConfig {
     }
 
     @Bean
-    public String insertSkills(@Value("classpath:sql/insertSkills.sql") Resource resource) throws IOException {
-        return resourceToString(resource);
-    }
-
-    @Bean
-    public String insertSavingThrows(@Value("classpath:sql/insertSavingThrows.sql") Resource resource) throws IOException {
-        return resourceToString(resource);
-    }
-
-    @Bean
-    public String insertAbilities(@Value("classpath:sql/insertAbilities.sql") Resource resource) throws IOException {
-        return resourceToString(resource);
-    }
-
-    @Bean
     public String insertAction(@Value("classpath:sql/insertAction.sql") Resource resource) throws IOException {
         return resourceToString(resource);
     }
@@ -48,7 +33,7 @@ public class SqlConfig {
     }
 
     @Bean
-    public String getMonstersByName(@Value("classpath:sql/getMonstersByName.sql") Resource resource) throws IOException {
+    public String getMonsterByName(@Value("classpath:sql/getMonsterByName.sql") Resource resource) throws IOException {
         return resourceToString(resource);
     }
 

@@ -25,7 +25,7 @@ public enum Alignment {
 
     public static Alignment getAlignment(String alignment) {
         try {
-            return Alignment.valueOf(alignment.trim().replaceAll("[//s]+", " ").toUpperCase());
+            return Alignment.valueOf(alignment.trim().replaceAll("[//s]+", "_").toUpperCase());
         } catch (IllegalArgumentException | NullPointerException e) {
             return null;
         }

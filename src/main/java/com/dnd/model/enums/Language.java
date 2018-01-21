@@ -24,7 +24,7 @@ public enum Language {
 
     public static Language getLanguage(String language) {
         try {
-            return Language.valueOf(language.trim().replaceAll("[//s]+", " ").toUpperCase());
+            return Language.valueOf(language.trim().replaceAll("[//s]+", "_").toUpperCase());
         } catch (IllegalArgumentException | NullPointerException e) {
             return null;
         }

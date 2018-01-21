@@ -1,9 +1,11 @@
 package com.dnd.dao;
 
+import com.dnd.model.Action;
 import com.dnd.model.Monster;
 import com.dnd.model.enums.Ability;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
-import org.postgresql.jdbc42.Jdbc42Array;
+import com.dnd.model.enums.ActionType;
+import com.dnd.model.enums.Skill;
+import com.dnd.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,10 +17,11 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.Array;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static com.dnd.utils.Utils.getEnumSqlArray;
+import static com.dnd.utils.Utils.getEnumValue;
 
 @Repository
 @Transactional
@@ -33,19 +36,12 @@ public class MonsterDao {
     private String getAllMonsterNames;
     @Resource(name = "getAllMonsters")
     private String getAllMonsters;
-    @Resource(name = "getMonstersByName")
-    private String getMonstersByName;
-
+    @Resource(name = "getMonsterByName")
+    private String getMonsterByName;
     @Resource(name = "insertMonster")
     private String insertMonster;
-    @Resource(name = "insertAbilities")
-    private String insertAbilities;
     @Resource(name = "insertAction")
     private String insertAction;
-    @Resource(name = "insertSavingThrows")
-    private String insertSavingThrows;
-    @Resource(name = "insertSkills")
-    private String insertSkills;
 
     public List<Monster> getAllMonsters() {
         return null;
@@ -59,8 +55,13 @@ public class MonsterDao {
         return null;
     }
 
-    public void createMonster(Monster monster) throws SQLException {
+    private List<Action> getActionsByMonsterName(String name){
+        return null;
+    }
+
+    public void createMonster(Monster monster, int user_id) throws SQLException {
         MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("created_by", user_id);
         params.addValue("name", monster.getName()) ;
         params.addValue("size", getEnumValue(monster.getSize()));
         params.addValue("type", getEnumValue(monster.getType()));
@@ -73,56 +74,60 @@ public class MonsterDao {
         params.addValue("senses", monster.getSenses());
         params.addValue("languages", monster.getLanguages());
         params.addValue("challenge_rating", monster.getChallengeRating());
-        params.addValue("damage_vulnerabilities", getEnumList(monster.getDamageVulnerabilities()));
-        params.addValue("damage_resistances", getEnumList(monster.getDamageResistances()));
-        params.addValue("damage_immunities", getEnumList(monster.getDamageImmunities()));
-        params.addValue("condition_immunities", getEnumList(monster.getConditionImmunities()));
+        params.addValue("damage_vulnerabilities", getEnumSqlArray(monster.getDamageVulnerabilities(), dataSource));
+        params.addValue("damage_resistances", getEnumSqlArray(monster.getDamageResistances(), dataSource));
+        params.addValue("damage_immunities", getEnumSqlArray(monster.getDamageImmunities(), dataSource));
+        params.addValue("condition_immunities", getEnumSqlArray(monster.getConditionImmunities(), dataSource));
+        params.addValue("strength", monster.getAbilities().get(Ability.STRENGTH));
+        params.addValue("dexterity", monster.getAbilities().get(Ability.DEXTERITY));
+        params.addValue("constitution", monster.getAbilities().get(Ability.CONSTITUTION));
+        params.addValue("wisdom", monster.getAbilities().get(Ability.WISDOM));
+        params.addValue("intelligence", monster.getAbilities().get(Ability.INTELLIGENCE));
+        params.addValue("charisma", monster.getAbilities().get(Ability.CHARISMA));
+        params.addValue("strength_save", monster.getSavingThrows().get(Ability.STRENGTH));
+        params.addValue("dexterity_save", monster.getSavingThrows().get(Ability.DEXTERITY));
+        params.addValue("constitution_save", monster.getSavingThrows().get(Ability.CONSTITUTION));
+        params.addValue("wisdom_save", monster.getSavingThrows().get(Ability.WISDOM));
+        params.addValue("intelligence_save", monster.getSavingThrows().get(Ability.INTELLIGENCE));
+        params.addValue("charisma_save", monster.getSavingThrows().get(Ability.CHARISMA));
+        params.addValue("acrobatics", monster.getSkills().get(Skill.ACROBATICS));
+        params.addValue("animal_handling",  monster.getSkills().get(Skill.ANIMAL_HANDLING));
+        params.addValue("arcana",  monster.getSkills().get(Skill.ARCANA));
+        params.addValue("athletics",  monster.getSkills().get(Skill.ATHLETICS));
+        params.addValue("deception",  monster.getSkills().get(Skill.DECEPTION));
+        params.addValue("history",  monster.getSkills().get(Skill.HISTORY));
+        params.addValue("insight",  monster.getSkills().get(Skill.INSIGHT));
+        params.addValue("intimidation",  monster.getSkills().get(Skill.INTIMIDATION));
+        params.addValue("investigation",  monster.getSkills().get(Skill.INVESTIGATION));
+        params.addValue("medicine",  monster.getSkills().get(Skill.MEDICINE));
+        params.addValue("nature",  monster.getSkills().get(Skill.NATURE));
+        params.addValue("perception",  monster.getSkills().get(Skill.PERCEPTION));
+        params.addValue("performance",  monster.getSkills().get(Skill.PERFORMANCE));
+        params.addValue("persuasion",  monster.getSkills().get(Skill.PERSUASION));
+        params.addValue("religion",  monster.getSkills().get(Skill.RELIGION));
+        params.addValue("slight_of_hand",  monster.getSkills().get(Skill.SLIGHT_OF_HAND));
+        params.addValue("stealth",  monster.getSkills().get(Skill.STEALTH));
+        params.addValue("survival",  monster.getSkills().get(Skill.SURVIVAL));
 
-        int id = jdbcTemplate.queryForObject(insertMonster, params, Integer.class);
-        insertAbilities(monster.getAbilities(), id);
-        insertSavingThrows(monster.getSavingThrows(), id);
-        System.out.println(id);
+        jdbcTemplate.update(insertMonster, params);
+        insertActions(ActionType.SPECIAL_ABILITY, monster.getSpecialAbilities(), monster.getName());
+        insertActions(ActionType.ACTION, monster.getActions(), monster.getName());
+        insertActions(ActionType.LEGENDARY_ACTION, monster.getLegendaryActions(), monster.getName());
     }
 
-    private void insertAbilities(Map<Ability, Integer> abilities, int id){
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("monster_id", id);
-        params.addValue("strength", abilities.get(Ability.STRENGTH));
-        params.addValue("dexterity", abilities.get(Ability.DEXTERITY));
-        params.addValue("constitution", abilities.get(Ability.CONSTITUTION));
-        params.addValue("wisdom", abilities.get(Ability.WISDOM));
-        params.addValue("intelligence", abilities.get(Ability.INTELLIGENCE));
-        params.addValue("charisma", abilities.get(Ability.CHARISMA));
-
-        jdbcTemplate.update(insertAbilities, params);
-    }
-
-    private void insertSavingThrows(Map<Ability, Integer> savingThrows, int id){
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("monster_id", id);
-        params.addValue("strength", savingThrows.get(Ability.STRENGTH));
-        params.addValue("dexterity", savingThrows.get(Ability.DEXTERITY));
-        params.addValue("constitution", savingThrows.get(Ability.CONSTITUTION));
-        params.addValue("wisdom", savingThrows.get(Ability.WISDOM));
-        params.addValue("intelligence", savingThrows.get(Ability.INTELLIGENCE));
-        params.addValue("charisma", savingThrows.get(Ability.CHARISMA));
-
-        jdbcTemplate.update(insertSavingThrows, params);
-    }
-
-    private Array getEnumList(List<? extends Enum> list) throws SQLException {
-        if (!CollectionUtils.isEmpty(list)) {
-            String[] array = list.stream().filter(a -> a != null).map(Enum::name).toArray(String[]::new);
-            return dataSource.getConnection().createArrayOf("varchar", array);
+    private void insertActions(ActionType actionType, List<Action> actions, String monsterName) {
+        for (Action action : actions) {
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("monster_name", monsterName);
+            params.addValue("action_type", actionType.getId());
+            params.addValue("name", action.getName());
+            params.addValue("attack_bonus", action.getAttackBonus());
+            params.addValue("damage_bonus", action.getDamageBonus());
+            params.addValue("damage_dice", action.getDamageDice());
+            params.addValue("description", action.getDesc());
+            jdbcTemplate.update(insertAction, params);
         }
-        return dataSource.getConnection().createArrayOf("varchar", new String[]{});
     }
 
-    private String getEnumValue(Enum value) {
-        if (value != null) {
-            return value.name();
-        }
-        return null;
-    }
 
 }

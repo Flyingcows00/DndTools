@@ -72,7 +72,7 @@ public class UnitTest {
             }
         }
 //        System.out.println(monster);
-        dao.createMonster(monster);
+        dao.createMonster(monster, 100);
     }
 
     @Test
