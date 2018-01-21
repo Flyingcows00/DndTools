@@ -1,3 +1,6 @@
+package com.dnd;
+
+import com.dnd.dao.MonsterDao;
 import com.dnd.model.Monster;
 import com.dnd.model.enums.Ability;
 import com.dnd.model.enums.Skill;
@@ -5,6 +8,10 @@ import com.google.gson.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +20,13 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class UnitTest {
+
+    @Autowired
+    private MonsterDao dao;
 
     @Test
     public void getMonsters() throws URISyntaxException, IOException {
