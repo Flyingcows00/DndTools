@@ -25,7 +25,6 @@ CREATE TABLE public.users
 WITH (OIDS = FALSE)
 TABLESPACE pg_default;
 ALTER TABLE public.users OWNER to postgres;
-INSERT INTO users(username, admin) VALUES('Dungeon Master', true);
 
 CREATE TABLE public.monster
 (
