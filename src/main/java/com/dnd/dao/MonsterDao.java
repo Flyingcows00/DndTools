@@ -5,26 +5,23 @@ import com.dnd.model.Monster;
 import com.dnd.model.enums.Ability;
 import com.dnd.model.enums.ActionType;
 import com.dnd.model.enums.Skill;
-import com.dnd.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
-import java.sql.Array;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
 
 import static com.dnd.utils.Utils.getEnumSqlArray;
 import static com.dnd.utils.Utils.getEnumValue;
 
 @Repository
-@Transactional
 public class MonsterDao {
 
     @Autowired
@@ -59,6 +56,7 @@ public class MonsterDao {
         return null;
     }
 
+//    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     public void createMonster(Monster monster, int user_id) throws SQLException {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("created_by", user_id);
@@ -108,7 +106,6 @@ public class MonsterDao {
         params.addValue("slight_of_hand",  monster.getSkills().get(Skill.SLIGHT_OF_HAND));
         params.addValue("stealth",  monster.getSkills().get(Skill.STEALTH));
         params.addValue("survival",  monster.getSkills().get(Skill.SURVIVAL));
-
         jdbcTemplate.update(insertMonster, params);
         insertActions(ActionType.SPECIAL_ABILITY, monster.getSpecialAbilities(), monster.getName());
         insertActions(ActionType.ACTION, monster.getActions(), monster.getName());

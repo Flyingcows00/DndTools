@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UnitTest {
+public class DataLoad {
 
     @Autowired
     private MonsterDao dao;
@@ -46,40 +47,35 @@ public class UnitTest {
     }
 
     @Test
-    public void jsonToMonster() throws IOException, SQLException {
+    public void jsonToMonsters() throws IOException, SQLException {
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
         JsonParser parser = new JsonParser();
-        String json = FileUtils.readFileToString(new File(this.getClass().getResource("/monster.txt").getFile()));
-        JsonObject jsonObject = parser.parse(json).getAsJsonObject();
+        String json = FileUtils.readFileToString(new File(this.getClass().getResource("/monsters.txt").getFile()));
+        JsonArray array = parser.parse(json).getAsJsonArray();
 
-        Monster monster = gson.fromJson(json, Monster.class);
-
-        for (Ability a : Ability.values()) {
-            JsonElement ability = jsonObject.get(a.name().toLowerCase());
-            JsonElement saving = jsonObject.get(a.name().toLowerCase() + "_save");
-            if (ability != null) {
-                monster.addAbility(a.name(), ability.getAsInt());
+        int count = 0;
+        for (JsonElement element : array) {
+            JsonObject jsonObject = element.getAsJsonObject();
+            System.out.println(++count);
+            Monster monster = gson.fromJson(jsonObject.toString(), Monster.class);
+            for (Ability a : Ability.values()) {
+                JsonElement ability = jsonObject.get(a.name().toLowerCase());
+                JsonElement saving = jsonObject.get(a.name().toLowerCase() + "_save");
+                if (ability != null) {
+                    monster.addAbility(a.name(), ability.getAsInt());
+                }
+                if (saving != null) {
+                    monster.addSavingThrow(a.name(), saving.getAsInt());
+                }
             }
-            if (saving != null) {
-                monster.addSavingThrow(a.name(), saving.getAsInt());
+            for (Skill s : Skill.values()) {
+                JsonElement skill = jsonObject.get(s.name().toLowerCase());
+                if (skill != null) {
+                    monster.addSkill(s.name(), skill.getAsInt());
+                }
             }
+            dao.createMonster(monster, 100);
         }
-
-        for (Skill s : Skill.values()) {
-            JsonElement skill = jsonObject.get(s.name().toLowerCase());
-            if (skill != null) {
-                monster.addSkill(s.name(), skill.getAsInt());
-            }
-        }
-//        System.out.println(monster);
-        dao.createMonster(monster, 100);
     }
 
-    @Test
-    public void name() {
-        List<DamageType> list = new ArrayList<>();
-        list.add(null);
-        List<String> result = list.stream().filter(a -> a != null).map(Enum::name).collect(Collectors.toList());
-        System.out.println(result);
-    }
 }
