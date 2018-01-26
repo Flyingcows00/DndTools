@@ -28,5 +28,5 @@ After the database is set up, run Application.java as a Spring Boot app.  You ca
 
 Operation | URL                                               | Description
 --------- | ------------------------------------------------- | -----------
-GET       | http://localhost:8080/dndtools/monsters           | Query a list of all of the available monsters in the database.
-GET       | http://localhost:8080/dndtools/monsters/[monster] | Query all the information about a specific monster
+GET       | http://localhost:8080/dndtools/monsters           | Returns a list of all of the available monsters in the database.
+GET       | http://localhost:8080/dndtools/monsters/[monster] | Returns all of the information about a specific monster
