@@ -1,0 +1,53 @@
+package com.dnd.resources;
+
+import com.dnd.dao.MonsterDao;
+import com.dnd.model.ErrorResponse;
+import com.dnd.model.Monster;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.PostConstruct;
+import java.util.List;
+
+@RestController
+@RequestMapping("monsters")
+public class MonsterResource {
+
+    @Autowired
+    private MonsterDao monsterDao;
+
+    private Gson gson;
+
+    @PostConstruct
+    private void setUpGson(){
+        GsonBuilder builder = new GsonBuilder();
+        gson = builder.setPrettyPrinting().create();
+    }
+
+    @GetMapping
+    public ResponseEntity<String> getMonsterNames(){
+        List<String> names = null;
+        try {
+             names = monsterDao.getAllMonsterNames();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(500, e).toJson());
+        }
+        return ResponseEntity.ok(gson.toJson(names));
+    }
+
+    @GetMapping(path = "/{name}")
+    public ResponseEntity<String> getMonsterByName(@PathVariable String name) {
+        Monster monster = null;
+        try {
+            monster = monsterDao.getMonsterByName(name);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(500, e).toJson());
+        }
+        return ResponseEntity.ok(gson.toJson(monster));
+    }
+
+}
