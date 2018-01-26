@@ -6,9 +6,13 @@ import com.dnd.model.Monster;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -23,16 +27,16 @@ public class MonsterResource {
     private Gson gson;
 
     @PostConstruct
-    private void setUpGson(){
+    private void setUpGson() {
         GsonBuilder builder = new GsonBuilder();
         gson = builder.setPrettyPrinting().create();
     }
 
     @GetMapping
-    public ResponseEntity<String> getMonsterNames(){
+    public ResponseEntity<String> getMonsterNames() {
         List<String> names = null;
         try {
-             names = monsterDao.getAllMonsterNames();
+            names = monsterDao.getAllMonsterNames();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(500, e).toJson());
         }
@@ -44,6 +48,8 @@ public class MonsterResource {
         Monster monster = null;
         try {
             monster = monsterDao.getMonsterByName(name);
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.MONSTER_NOT_FOUND.toJson());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(500, e).toJson());
         }

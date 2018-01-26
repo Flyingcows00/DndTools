@@ -1,6 +1,6 @@
 package com.dnd.model;
 
-import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class ErrorResponse {
 
@@ -10,6 +10,8 @@ public class ErrorResponse {
 
     public static final String UNKNOWN_ERROR = "Unknown Error";
     public static final String UNKNOWN_DESCRIPTION = "Something when wrong while processing your request";
+
+    public static final ErrorResponse MONSTER_NOT_FOUND = new ErrorResponse(404, "Monster Not Found", "The requested monster could not be found in the database.");
 
     public ErrorResponse(int statusCode) {
         this.statusCode = statusCode;
@@ -30,7 +32,7 @@ public class ErrorResponse {
     }
 
     public String toJson() {
-        return (new Gson()).toJson(this);
+        return (new GsonBuilder().setPrettyPrinting().create()).toJson(this);
     }
 
 }

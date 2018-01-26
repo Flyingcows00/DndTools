@@ -2,8 +2,6 @@ package com.dnd.model;
 
 import com.dnd.model.enums.ActionType;
 
-import java.util.Map;
-
 public class Action {
 
     private ActionType actionType;
