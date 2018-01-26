@@ -2,6 +2,8 @@ package com.dnd.dao;
 
 import com.dnd.model.Action;
 import com.dnd.model.Monster;
+import com.dnd.model.adapter.ActionRowMapper;
+import com.dnd.model.adapter.MonsterRowMapper;
 import com.dnd.model.enums.Ability;
 import com.dnd.model.enums.ActionType;
 import com.dnd.model.enums.Skill;
@@ -16,12 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.dnd.utils.Utils.getEnumSqlArray;
 import static com.dnd.utils.Utils.getEnumValue;
 
 @Repository
+@Transactional
 public class MonsterDao {
 
     @Autowired
@@ -31,32 +36,35 @@ public class MonsterDao {
 
     @Resource(name = "getAllMonsterNames")
     private String getAllMonsterNames;
-    @Resource(name = "getAllMonsters")
-    private String getAllMonsters;
     @Resource(name = "getMonsterByName")
     private String getMonsterByName;
+    @Resource(name = "getActionsByMonsterName")
+    private String getActionsByMonsterName;
     @Resource(name = "insertMonster")
     private String insertMonster;
     @Resource(name = "insertAction")
     private String insertAction;
 
-    public List<Monster> getAllMonsters() {
-        return null;
-    }
 
     public List<String> getAllMonsterNames() {
-        return null;
+        return jdbcTemplate.queryForList(getAllMonsterNames, new HashMap<>(), String.class);
     }
 
     public Monster getMonsterByName(String name) {
-        return null;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("monster_name", name);
+        Monster monster = jdbcTemplate.queryForObject(getMonsterByName, params, new MonsterRowMapper());
+        List<Action> actions = getActionsByMonsterName(name);
+        monster.setActions(actions);
+        return monster;
     }
 
     private List<Action> getActionsByMonsterName(String name){
-        return null;
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("monster_name", name);
+        return jdbcTemplate.query(getActionsByMonsterName, params, new ActionRowMapper());
     }
 
-//    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     public void createMonster(Monster monster, int user_id) throws SQLException {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("created_by", user_id);

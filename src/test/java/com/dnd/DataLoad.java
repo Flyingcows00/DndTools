@@ -78,4 +78,9 @@ public class DataLoad {
         }
     }
 
+    @Test
+    public void getMonstersFromDatabase() {
+        Monster monster = dao.getMonsterByName("Adult Brass Dragon");
+        System.out.println(monster);
+    }
 }

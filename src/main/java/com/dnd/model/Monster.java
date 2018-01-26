@@ -54,10 +54,6 @@ public class Monster {
         legendaryActions = new ArrayList<>();
     }
 
-    public void setStrength(int strength) {
-        abilities.put(Ability.STRENGTH, strength);
-    }
-
     public void setSize(String size) {
         this.size = Size.getSize(size);
     }
@@ -88,6 +84,13 @@ public class Monster {
 
     public void setConditionImmunities(String conditionImmunities) {
         this.conditionImmunities = Condition.getConditionList(conditionImmunities);
+    }
+
+    public void setActions(List<Action> actions) {
+        Map<ActionType, List<Action>> actionTypes = ActionType.splitByActionType(actions);
+        this.actions = actionTypes.get(ActionType.ACTION);
+        this.legendaryActions = actionTypes.get(ActionType.LEGENDARY_ACTION);
+        this.specialAbilities = actionTypes.get(ActionType.SPECIAL_ABILITY);
     }
 
     public void addAbility(String ability, int value) {

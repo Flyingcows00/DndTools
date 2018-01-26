@@ -28,12 +28,22 @@ public class SqlConfig {
     }
 
     @Bean
-    public String getAllMonsters(@Value("classpath:sql/getAllMonsters.sql") Resource resource) throws IOException {
+    public String getMonsterByName(@Value("classpath:sql/getMonsterByName.sql") Resource resource) throws IOException {
         return resourceToString(resource);
     }
 
     @Bean
-    public String getMonsterByName(@Value("classpath:sql/getMonsterByName.sql") Resource resource) throws IOException {
+    public String getActionsByMonsterName(@Value("classpath:sql/getActionsByMonsterName.sql") Resource resource) throws IOException {
+        return resourceToString(resource);
+    }
+
+    @Bean
+    public String addUser(@Value("classpath:sql/addUser.sql") Resource resource) throws IOException {
+        return resourceToString(resource);
+    }
+
+    @Bean
+    public String removeUser(@Value("classpath:sql/removeUser.sql") Resource resource) throws IOException {
         return resourceToString(resource);
     }
 

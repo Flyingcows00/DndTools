@@ -43,7 +43,7 @@ public enum Skill {
 
     public static Skill getSkill(String skill) {
         try {
-            return Skill.valueOf(skill.trim().replaceAll("[//s]+", "_").toUpperCase());
+            return Skill.valueOf(skill.trim().replaceAll("[\\s]+", "_").toUpperCase());
         } catch (IllegalArgumentException | NullPointerException e) {
             return null;
         }

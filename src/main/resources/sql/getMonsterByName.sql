@@ -9,4 +9,4 @@ FROM monster AS m
     INNER JOIN saving_throws AS st ON m.name = st.name
     INNER JOIN skills AS sk ON m.name = sk.name
     INNER JOIN users AS u ON m.created_by = u.user_id
-WHERE m.name = :name
+WHERE m.name = :monster_name

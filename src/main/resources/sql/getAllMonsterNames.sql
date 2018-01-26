@@ -1,1 +1,2 @@
-blah
+SELECT name
+FROM monster
