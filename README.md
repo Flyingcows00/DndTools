@@ -24,11 +24,9 @@ After each line, you will be prompted for the password for user 'postgres'.  Thi
 
 ### Rest Urls
 
-After running Application.java as a Spring Boot app, you can now query the database using a tool such as postman.  The following urls are currently available:
+After the database is set up, run Application.java as a Spring Boot app.  You can now query the database using a tool such as [Postman](https://www.getpostman.com/).  The following urls are currently available:
 
-```
-1. http://localhost:8080/dndtools/monsters - Query a list of all of the available monsters in the database.
-
-2. http://localhost:8080/dndtools/monsters/[monster-name] - Query all the information about a specific monster
-
-```
+Operation | URL                                               | Description
+--------- | ------------------------------------------------- | -----------
+GET       | http://localhost:8080/dndtools/monsters           | Query a list of all of the available monsters in the database.
+GET       | http://localhost:8080/dndtools/monsters/[monster] | Query all the information about a specific monster
