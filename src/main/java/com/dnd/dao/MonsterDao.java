@@ -7,6 +7,7 @@ import com.dnd.model.adapter.MonsterRowMapper;
 import com.dnd.model.enums.Ability;
 import com.dnd.model.enums.ActionType;
 import com.dnd.model.enums.Skill;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +26,9 @@ import static com.dnd.utils.Utils.getEnumValue;
 @Transactional
 public class MonsterDao {
 
-    @Autowired
+    @Resource(name = "customJdbcTemplate")
     private NamedParameterJdbcTemplate jdbcTemplate;
-    @Autowired
+    @Resource(name = "customDataSource")
     private DataSource dataSource;
 
     @Resource(name = "getAllMonsterNames")
@@ -56,7 +56,7 @@ public class MonsterDao {
         return monster;
     }
 
-    private List<Action> getActionsByMonsterName(String name){
+    private List<Action> getActionsByMonsterName(String name) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("monster_name", name);
         return jdbcTemplate.query(getActionsByMonsterName, params, new ActionRowMapper());
@@ -65,7 +65,7 @@ public class MonsterDao {
     public void createMonster(Monster monster, int user_id) throws SQLException {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("created_by", user_id);
-        params.addValue("name", monster.getName()) ;
+        params.addValue("name", monster.getName());
         params.addValue("size", getEnumValue(monster.getSize()));
         params.addValue("type", getEnumValue(monster.getType()));
         params.addValue("subtype", getEnumValue(monster.getSubtype()));
@@ -94,23 +94,23 @@ public class MonsterDao {
         params.addValue("intelligence_save", monster.getSavingThrows().get(Ability.INTELLIGENCE));
         params.addValue("charisma_save", monster.getSavingThrows().get(Ability.CHARISMA));
         params.addValue("acrobatics", monster.getSkills().get(Skill.ACROBATICS));
-        params.addValue("animal_handling",  monster.getSkills().get(Skill.ANIMAL_HANDLING));
-        params.addValue("arcana",  monster.getSkills().get(Skill.ARCANA));
-        params.addValue("athletics",  monster.getSkills().get(Skill.ATHLETICS));
-        params.addValue("deception",  monster.getSkills().get(Skill.DECEPTION));
-        params.addValue("history",  monster.getSkills().get(Skill.HISTORY));
-        params.addValue("insight",  monster.getSkills().get(Skill.INSIGHT));
-        params.addValue("intimidation",  monster.getSkills().get(Skill.INTIMIDATION));
-        params.addValue("investigation",  monster.getSkills().get(Skill.INVESTIGATION));
-        params.addValue("medicine",  monster.getSkills().get(Skill.MEDICINE));
-        params.addValue("nature",  monster.getSkills().get(Skill.NATURE));
-        params.addValue("perception",  monster.getSkills().get(Skill.PERCEPTION));
-        params.addValue("performance",  monster.getSkills().get(Skill.PERFORMANCE));
-        params.addValue("persuasion",  monster.getSkills().get(Skill.PERSUASION));
-        params.addValue("religion",  monster.getSkills().get(Skill.RELIGION));
-        params.addValue("slight_of_hand",  monster.getSkills().get(Skill.SLIGHT_OF_HAND));
-        params.addValue("stealth",  monster.getSkills().get(Skill.STEALTH));
-        params.addValue("survival",  monster.getSkills().get(Skill.SURVIVAL));
+        params.addValue("animal_handling", monster.getSkills().get(Skill.ANIMAL_HANDLING));
+        params.addValue("arcana", monster.getSkills().get(Skill.ARCANA));
+        params.addValue("athletics", monster.getSkills().get(Skill.ATHLETICS));
+        params.addValue("deception", monster.getSkills().get(Skill.DECEPTION));
+        params.addValue("history", monster.getSkills().get(Skill.HISTORY));
+        params.addValue("insight", monster.getSkills().get(Skill.INSIGHT));
+        params.addValue("intimidation", monster.getSkills().get(Skill.INTIMIDATION));
+        params.addValue("investigation", monster.getSkills().get(Skill.INVESTIGATION));
+        params.addValue("medicine", monster.getSkills().get(Skill.MEDICINE));
+        params.addValue("nature", monster.getSkills().get(Skill.NATURE));
+        params.addValue("perception", monster.getSkills().get(Skill.PERCEPTION));
+        params.addValue("performance", monster.getSkills().get(Skill.PERFORMANCE));
+        params.addValue("persuasion", monster.getSkills().get(Skill.PERSUASION));
+        params.addValue("religion", monster.getSkills().get(Skill.RELIGION));
+        params.addValue("slight_of_hand", monster.getSkills().get(Skill.SLIGHT_OF_HAND));
+        params.addValue("stealth", monster.getSkills().get(Skill.STEALTH));
+        params.addValue("survival", monster.getSkills().get(Skill.SURVIVAL));
         jdbcTemplate.update(insertMonster, params);
         insertActions(ActionType.SPECIAL_ABILITY, monster.getSpecialAbilities(), monster.getName());
         insertActions(ActionType.ACTION, monster.getActions(), monster.getName());

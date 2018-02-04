@@ -44,12 +44,16 @@ public enum Condition {
     }
 
     public static List<Condition> getConditionList(String conditions) {
-        List<Condition> conditionList = new ArrayList<Condition>();
-        String[] split = conditions.split(",");
-        for (String s : split) {
-            conditionList.add(getCondition(s));
+        try {
+            List<Condition> conditionList = new ArrayList<Condition>();
+            String[] split = conditions.split(",");
+            for (String s : split) {
+                conditionList.add(getCondition(s));
+            }
+            return conditionList;
+        } catch (NullPointerException e) {
+            return null;
         }
-        return conditionList;
     }
 
 }

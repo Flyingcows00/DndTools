@@ -43,12 +43,16 @@ public enum DamageType {
     }
 
     public static List<DamageType> getDamageTypeList(String damageType) {
-        List<DamageType> damages = new ArrayList<DamageType>();
-        String[] split = damageType.split(",");
-        for (String s : split) {
-            damages.add(getDamageType(s));
+        try {
+            List<DamageType> damages = new ArrayList<DamageType>();
+            String[] split = damageType.split(",");
+            for (String s : split) {
+                damages.add(getDamageType(s));
+            }
+            return damages;
+        } catch (NullPointerException e) {
+            return null;
         }
-        return damages;
     }
 
 }
