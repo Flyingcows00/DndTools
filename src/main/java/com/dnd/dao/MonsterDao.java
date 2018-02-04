@@ -26,9 +26,9 @@ import static com.dnd.utils.Utils.getEnumValue;
 @Transactional
 public class MonsterDao {
 
-    @Resource(name = "customJdbcTemplate")
+    @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
-    @Resource(name = "customDataSource")
+    @Autowired
     private DataSource dataSource;
 
     @Resource(name = "getAllMonsterNames")
