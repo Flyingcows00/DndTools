@@ -39,6 +39,7 @@ public class MonsterRowMapper implements RowMapper<Monster> {
         monster.addSavingThrow("wisdom", rs.getInt("wisdom_save"));
         monster.addSavingThrow("intelligence", rs.getInt("intelligence_save"));
         monster.addSavingThrow("charisma", rs.getInt("charisma_save"));
+        monster.addSkill("acrobatics", rs.getInt("acrobatics"));
         monster.addSkill("animal_handling", rs.getInt("animal_handling"));
         monster.addSkill("arcana", rs.getInt("arcana"));
         monster.addSkill("athletics", rs.getInt("athletics"));
