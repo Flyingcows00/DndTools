@@ -5,8 +5,10 @@ DROP TABLE IF EXISTS public.skills;
 DROP TABLE IF EXISTS public.action;
 DROP TABLE IF EXISTS public.monster;
 DROP TABLE IF EXISTS public.users;
+DROP TABLE IF EXISTS public.spell;
 DROP SEQUENCE IF EXISTS public.user_id_seq;
 DROP SEQUENCE IF EXISTS public.action_id_seq;
+DROP SEQUENCE IF EXISTS public.spell_id_seq;
 
 
 CREATE SEQUENCE public.user_id_seq START 100;
@@ -14,6 +16,9 @@ ALTER SEQUENCE public.user_id_seq OWNER TO postgres;
 
 CREATE SEQUENCE public.action_id_seq START 100;
 ALTER SEQUENCE public.action_id_seq OWNER TO postgres;
+
+CREATE SEQUENCE public.spell_id_seq START 100;
+ALTER SEQUENCE public.spell_id_seq OWNER TO postgres;
 
 CREATE TABLE public.users
 (
@@ -131,6 +136,29 @@ CREATE TABLE public.action
         ON UPDATE CASCADE
         ON DELETE CASCADE
 )
+WITH (OIDS = FALSE)
+TABLESPACE pg_default;
+ALTER TABLE public.action OWNER to postgres;
+
+CREATE TABLE public.spell
+{
+    spell_id smallint NOT NULL DEFAULT nextval('spell_id_seq'::regclass)
+    name text NOT NULL,
+    description text NOT NULL,
+    page text,
+    range text,
+    components text,
+    materials text,
+    ritual boolean DEFAULT false,
+    duration text,
+    concentration boolean NOT NULL DEFAULT false,
+    casting_time text NOT NULL,
+    level smallint NOT NULL,
+    school text,
+    classes text,
+    higher_level text
+    CONSTRAINT spell_pkey PRIMARY KEY (name)
+}
 WITH (OIDS = FALSE)
 TABLESPACE pg_default;
 ALTER TABLE public.action OWNER to postgres;

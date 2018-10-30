@@ -52,6 +52,11 @@ public class SqlConfig {
         return resourceToString(resource);
     }
 
+    @Bean
+    public String insertSpell(@Value("classpath:sql/insertSpell.sql") Resource resource) throws IOException {
+        return resourceToString(resource);
+    }
+
     private String resourceToString(Resource resource) throws IOException {
         File file = resource.getFile();
         String str = new String(Files.readAllBytes(file.toPath()));
