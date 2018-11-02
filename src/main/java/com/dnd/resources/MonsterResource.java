@@ -22,14 +22,6 @@ public class MonsterResource {
     @Autowired
     private MonsterDao monsterDao;
 
-    private Gson gson;
-
-    @PostConstruct
-    private void setUpGson() {
-        GsonBuilder builder = new GsonBuilder();
-        gson = builder.setPrettyPrinting().create();
-    }
-
     @GetMapping
     public ResponseEntity<String> getMonsterNames() {
         List<String> names = null;

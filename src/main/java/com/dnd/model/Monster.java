@@ -17,13 +17,9 @@ public class Monster {
     private Map<Ability, Integer> abilities;
     private Map<Ability, Integer> savingThrows;
     private Map<Skill, Integer> skills;
-    @JsonAdapter(DamageAdapter.class)
     private List<DamageType> damageVulnerabilities;
-    @JsonAdapter(DamageAdapter.class)
     private List<DamageType> damageResistances;
-    @JsonAdapter(DamageAdapter.class)
     private List<DamageType> damageImmunities;
-    @JsonAdapter(ConditionAdapter.class)
     private List<Condition> conditionImmunities;
     private List<Action> specialAbilities;
     private List<Action> actions;
