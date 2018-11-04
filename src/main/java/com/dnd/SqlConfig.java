@@ -57,6 +57,10 @@ public class SqlConfig {
         return resourceToString(resource);
     }
 
+    public String getUser(@Value("classpath:sql/getUser.sql") Resource resource) throws IOException {
+        return resourceToString(resource);
+    }
+
     private String resourceToString(Resource resource) throws IOException {
         File file = resource.getFile();
         String str = new String(Files.readAllBytes(file.toPath()));
