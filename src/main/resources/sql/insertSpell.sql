@@ -1,2 +1,0 @@
-INSERT INTO spell(name, description, page, range, components, materials, ritual, duration, concentration, casting_time, level, school, classes, higher_level)
-values(:name, :description, :page, :range, :components, :materials, :ritual, :duration, :concentration, :casting_time, :level, :school, :classes, :higher_level)

@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.function.Consumer;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)

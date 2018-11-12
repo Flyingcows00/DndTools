@@ -1,11 +1,8 @@
 package com.dnd.model;
 
-import com.dnd.model.adapter.CharacterClassAdapter;
-import com.dnd.model.adapter.SpellComponentAdapter;
 import com.dnd.model.enums.CharacterClass;
 import com.dnd.model.enums.MagicSchool;
 import com.dnd.model.enums.SpellComponent;
-import com.google.gson.annotations.JsonAdapter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -17,8 +14,7 @@ public class Spell {
     private String description;
     private String page;
     private String range;
-    @JsonAdapter(SpellComponentAdapter.class)
-    private List<SpellComponent> components;
+    private String components;
     private String materials;
     private boolean ritual;
     private String duration;
@@ -26,8 +22,7 @@ public class Spell {
     private String castingTime;
     private int level;
     private MagicSchool school;
-    @JsonAdapter(CharacterClassAdapter.class)
-    private List<CharacterClass> classes;
+    private String classes;
     private String higherLevel;
 
     public String getName() {
@@ -62,11 +57,11 @@ public class Spell {
         this.range = range;
     }
 
-    public List<SpellComponent> getComponents() {
+    public String getComponents() {
         return components;
     }
 
-    public void setComponents(List<SpellComponent> components) {
+    public void setComponents(String components) {
         this.components = components;
     }
 
@@ -126,11 +121,11 @@ public class Spell {
         this.school = school;
     }
 
-    public List<CharacterClass> getClasses() {
+    public String getClasses() {
         return classes;
     }
 
-    public void setClasses(List<CharacterClass> classes) {
+    public void setClasses(String classes) {
         this.classes = classes;
     }
 

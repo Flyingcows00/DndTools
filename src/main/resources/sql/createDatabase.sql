@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS dndtools;
+CREATE DATABASE dndtools;

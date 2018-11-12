@@ -1,9 +1,6 @@
 package com.dnd.model;
 
-import com.dnd.model.adapter.ConditionAdapter;
-import com.dnd.model.adapter.DamageAdapter;
 import com.dnd.model.enums.*;
-import com.google.gson.annotations.JsonAdapter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
