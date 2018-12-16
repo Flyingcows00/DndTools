@@ -2,13 +2,9 @@ package com.dnd.resources;
 
 import com.dnd.dao.UserDao;
 import com.dnd.model.User;
+import com.dnd.model.UsersResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("users")
@@ -19,8 +15,15 @@ public class UserResource {
     private UserDao dao;
 
     @GetMapping
-    public List<User> getUsers() {
-        return dao.getUsers();
+    public UsersResponse getUsers() {
+        UsersResponse users = new UsersResponse();
+        users.setUsers(dao.getUsers());
+        return users;
+    }
+
+    @GetMapping("/{username}")
+    public User getuser(@PathVariable String username) {
+        return dao.getUser(username);
     }
 
 }

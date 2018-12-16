@@ -1,9 +1,6 @@
 package com.dnd.model;
 
-import com.dnd.model.adapter.ConditionAdapter;
-import com.dnd.model.adapter.DamageAdapter;
 import com.dnd.model.enums.*;
-import com.google.gson.annotations.JsonAdapter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -17,13 +14,9 @@ public class Monster {
     private Map<Ability, Integer> abilities;
     private Map<Ability, Integer> savingThrows;
     private Map<Skill, Integer> skills;
-    @JsonAdapter(DamageAdapter.class)
     private List<DamageType> damageVulnerabilities;
-    @JsonAdapter(DamageAdapter.class)
     private List<DamageType> damageResistances;
-    @JsonAdapter(DamageAdapter.class)
     private List<DamageType> damageImmunities;
-    @JsonAdapter(ConditionAdapter.class)
     private List<Condition> conditionImmunities;
     private List<Action> specialAbilities;
     private List<Action> actions;

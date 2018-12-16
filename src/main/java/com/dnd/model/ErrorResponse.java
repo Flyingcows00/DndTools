@@ -1,6 +1,8 @@
 package com.dnd.model;
 
-import com.google.gson.GsonBuilder;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ErrorResponse {
 
@@ -32,7 +34,14 @@ public class ErrorResponse {
     }
 
     public String toJson() {
-        return (new GsonBuilder().setPrettyPrinting().create()).toJson(this);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = null;
+        try {
+            json = mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            json = "Unknown Error";
+        }
+        return json;
     }
 
 }

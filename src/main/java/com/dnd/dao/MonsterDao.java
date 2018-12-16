@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -31,26 +30,21 @@ public class MonsterDao {
     @Autowired
     private DataSource dataSource;
 
-    @Resource(name = "getAllMonsterNames")
-    private String getAllMonsterNames;
-    @Resource(name = "getMonsterByName")
-    private String getMonsterByName;
-    @Resource(name = "getActionsByMonsterName")
-    private String getActionsByMonsterName;
-    @Resource(name = "insertMonster")
-    private String insertMonster;
-    @Resource(name = "insertAction")
-    private String insertAction;
+    private static final String GET_ALL_MONSTER_NAMES = "SELECT name FROM monster;";
+    private static final String GET_MONSTER_BY_NAME = "SELECT u.user_id, u.username AS username, m.name, m.size, m.type, m.subtype, m.alignment, m.armor_class, m.hit_points, m.hit_dice, m.speed, m.senses, m.languages, m.challenge_rating, m.damage_vulnerabilities, m.damage_resistances, m.damage_immunities, m.condition_immunities, al.strength, al.dexterity, al.constitution, al.wisdom, al.intelligence, al.charisma, st.strength AS strength_save, st.dexterity AS dexterity_save, st.constitution AS constitution_save, st.wisdom AS wisdom_save, st.intelligence AS intelligence_save, st.charisma AS charisma_save, sk.acrobatics, sk.animal_handling, sk.arcana, sk.athletics, sk.deception, sk.history, sk.insight, sk.intimidation, sk.investigation, sk.medicine, sk.nature, sk.perception, sk.performance, sk.persuasion, sk.religion, sk.slight_of_hand, sk.stealth, sk.survival FROM monster AS m INNER JOIN ability_levels AS al ON m.name = al.name INNER JOIN saving_throws AS st ON m.name = st.name INNER JOIN skills AS sk ON m.name = sk.name INNER JOIN users AS u ON m.created_by = u.user_id WHERE UPPER(m.name) = UPPER(:monster_name);";
+    private static final String GET_ACTIONS_BY_MONSTER_NAME = "SELECT name, description, action_type, damage_bonus, damage_dice, attack_bonus FROM action WHERE monster_name = :monster_name;";
+    private static final String INSERT_MONSTER = "INSERT INTO monster(name,created_by,size,type,subtype,alignment,armor_class,hit_points,hit_dice,speed,senses,languages,challenge_rating,damage_vulnerabilities,damage_resistances,damage_immunities,condition_immunities) VALUES(:name,:created_by,:size,:type,:subtype,:alignment,:armor_class,:hit_points,:hit_dice,:speed,:senses,:languages,:challenge_rating,:damage_vulnerabilities,:damage_resistances,:damage_immunities,:condition_immunities); INSERT INTO ability_levels(name,strength,dexterity,constitution,wisdom,intelligence,charisma) VALUES(:name,:strength,:dexterity,:constitution,:wisdom,:intelligence,:charisma); INSERT INTO saving_throws(name,strength,dexterity,constitution,wisdom,intelligence,charisma) VALUES(:name,:strength_save,:dexterity_save,:constitution_save,:wisdom_save,:intelligence_save,:charisma_save); INSERT INTO skills(name,acrobatics,animal_handling,arcana,athletics,deception,history,insight,intimidation,investigation,medicine,nature,perception,performance,persuasion,religion,slight_of_hand,stealth,survival) VALUES(:name,:acrobatics,:animal_handling,:arcana,:athletics,:deception,:history,:insight,:intimidation,:investigation,:medicine,:nature,:perception,:performance,:persuasion,:religion,:slight_of_hand,:stealth,:survival);";
+    private static final String INSTERT_ACTION = "INSERT INTO action(monster_name,action_type,name,damage_bonus,damage_dice,attack_bonus,description) VALUES(:monster_name,:action_type,:name,:damage_bonus,:damage_dice,:attack_bonus,:description);";
 
 
     public List<String> getAllMonsterNames() {
-        return jdbcTemplate.queryForList(getAllMonsterNames, new HashMap<>(), String.class);
+        return jdbcTemplate.queryForList(GET_ALL_MONSTER_NAMES, new HashMap<>(), String.class);
     }
 
     public Monster getMonsterByName(String name) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("monster_name", name);
-        Monster monster = jdbcTemplate.queryForObject(getMonsterByName, params, new MonsterRowMapper());
+        Monster monster = jdbcTemplate.queryForObject(GET_MONSTER_BY_NAME, params, new MonsterRowMapper());
         List<Action> actions = getActionsByMonsterName(name);
         monster.setActions(actions);
         return monster;
@@ -59,7 +53,7 @@ public class MonsterDao {
     private List<Action> getActionsByMonsterName(String name) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("monster_name", name);
-        return jdbcTemplate.query(getActionsByMonsterName, params, new ActionRowMapper());
+        return jdbcTemplate.query(GET_ACTIONS_BY_MONSTER_NAME, params, new ActionRowMapper());
     }
 
     public void createMonster(Monster monster, int user_id) throws SQLException {
@@ -111,7 +105,7 @@ public class MonsterDao {
         params.addValue("slight_of_hand", monster.getSkills().get(Skill.SLIGHT_OF_HAND));
         params.addValue("stealth", monster.getSkills().get(Skill.STEALTH));
         params.addValue("survival", monster.getSkills().get(Skill.SURVIVAL));
-        jdbcTemplate.update(insertMonster, params);
+        jdbcTemplate.update(INSERT_MONSTER, params);
         insertActions(ActionType.SPECIAL_ABILITY, monster.getSpecialAbilities(), monster.getName());
         insertActions(ActionType.ACTION, monster.getActions(), monster.getName());
         insertActions(ActionType.LEGENDARY_ACTION, monster.getLegendaryActions(), monster.getName());
@@ -127,7 +121,7 @@ public class MonsterDao {
             params.addValue("damage_bonus", action.getDamageBonus());
             params.addValue("damage_dice", action.getDamageDice());
             params.addValue("description", action.getDesc());
-            jdbcTemplate.update(insertAction, params);
+            jdbcTemplate.update(INSTERT_ACTION, params);
         }
     }
 
