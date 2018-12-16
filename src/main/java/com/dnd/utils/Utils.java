@@ -4,7 +4,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.sql.DataSource;
 import java.sql.Array;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
