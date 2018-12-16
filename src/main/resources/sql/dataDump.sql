@@ -1,7 +1,7 @@
 USE dndtools;
 
 
-INSERT INTO dndtools.users (user_id, username, admin) VALUES (100, 'Dungeon Master', true);
+INSERT INTO dndtools.users (user_id, username, admin, first_name, last_name) VALUES (100, 'Dungeon Master', true, 'Logan', 'Maughan');
 
 
 INSERT INTO dndtools.monster (name,created_by,`size`,`type`,subtype,alignment,armor_class,hit_points,hit_dice,speed,senses,languages,challenge_rating,damage_vulnerabilities,damage_resistances,damage_immunities,condition_immunities) VALUES
