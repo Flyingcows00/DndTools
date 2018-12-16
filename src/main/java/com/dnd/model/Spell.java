@@ -1,19 +1,14 @@
 package com.dnd.model;
 
-import com.dnd.model.enums.CharacterClass;
-import com.dnd.model.enums.MagicSchool;
-import com.dnd.model.enums.SpellComponent;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.List;
 
 public class Spell {
 
     private String name;
     private String description;
     private String page;
-    private String range;
+    private String spellRange;
     private String components;
     private String materials;
     private boolean ritual;
@@ -21,7 +16,7 @@ public class Spell {
     private boolean concentration;
     private String castingTime;
     private int level;
-    private MagicSchool school;
+    private String school;
     private String classes;
     private String higherLevel;
 
@@ -49,12 +44,12 @@ public class Spell {
         this.page = page;
     }
 
-    public String getRange() {
-        return range;
+    public String getSpellRange() {
+        return spellRange;
     }
 
-    public void setRange(String range) {
-        this.range = range;
+    public void setSpellRange(String spellRange) {
+        this.spellRange = spellRange;
     }
 
     public String getComponents() {
@@ -113,11 +108,11 @@ public class Spell {
         this.level = level;
     }
 
-    public MagicSchool getSchool() {
+    public String getSchool() {
         return school;
     }
 
-    public void setSchool(MagicSchool school) {
+    public void setSchool(String school) {
         this.school = school;
     }
 
