@@ -7,14 +7,14 @@ DROP TABLE IF EXISTS abilities;
 DROP TABLE IF EXISTS skills;
 DROP TABLE IF EXISTS action;
 DROP TABLE IF EXISTS monster;
-DROP TABLE IF EXISTS USERS;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS spell;
 
-CREATE TABLE USERS
+CREATE TABLE users
 (
   user_id SMALLINT AUTO_INCREMENT PRIMARY KEY,
   username text NOT NULL,
-  ADMIN BOOLEAN DEFAULT FALSE,
+  admin boolean DEFAULT FALSE,
   first_name text NOT NULL,
   last_name text NOT NULL
 );
@@ -38,8 +38,7 @@ CREATE TABLE monster
   damage_resistances text,
   damage_immunities text,
   condition_immunities text,
-  FOREIGN KEY(created_by)
-  REFERENCES USERS(user_id)
+  FOREIGN KEY(created_by) REFERENCES users(user_id)
   ON DELETE CASCADE ON UPDATE CASCADE );
 
 CREATE TABLE ability_levels
@@ -51,8 +50,7 @@ CREATE TABLE ability_levels
   intelligence SMALLINT,
   charisma SMALLINT,
   name VARCHAR(255) NOT NULL PRIMARY KEY,
-  FOREIGN KEY (name)
-      REFERENCES monster(name)
+  FOREIGN KEY(name) REFERENCES monster(name)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -65,8 +63,7 @@ CREATE TABLE saving_throws
   intelligence SMALLINT,
   charisma SMALLINT,
   name VARCHAR(255) NOT NULL PRIMARY KEY,
-  FOREIGN KEY (name)
-      REFERENCES monster(name)
+  FOREIGN KEY(name) REFERENCES monster(name)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -92,8 +89,7 @@ CREATE TABLE skills
   slight_of_hand SMALLINT,
   stealth SMALLINT,
   survival SMALLINT,
-  FOREIGN KEY (name)
-      REFERENCES monster(name)
+  FOREIGN KEY(name) REFERENCES monster(name)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -107,8 +103,7 @@ CREATE TABLE action
   damage_dice text,
   attack_bonus SMALLINT,
   description text,
-  FOREIGN KEY(monster_name)
-  REFERENCES monster(name)
+  FOREIGN KEY(monster_name) REFERENCES monster(name)
   ON UPDATE CASCADE ON DELETE CASCADE
 );
 
