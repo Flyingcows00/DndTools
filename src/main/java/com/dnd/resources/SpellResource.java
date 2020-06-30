@@ -23,15 +23,15 @@ public class SpellResource {
         return ResponseEntity.ok(spells);
     }
 
-    @GetMapping("/{spellId}")
-    public ResponseEntity<?> getSpellById(@PathVariable String spellId) {
-        Spell spell = dao.getSpellById(spellId);
+    @GetMapping("/{name}")
+    public ResponseEntity<?> getSpellById(@PathVariable String name) {
+        Spell spell = dao.getSpellByName(name);
         return ResponseEntity.ok(spell);
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<?> emptyResultSetExceptionHandler(EmptyResultDataAccessException exception) {
-        return ResponseEntity.status(404).body("Spell not found for provided ID.");
+        return ResponseEntity.status(404).body("Spell not found for provided name.");
     }
 
 }
