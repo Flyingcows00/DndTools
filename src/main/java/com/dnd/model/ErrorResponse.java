@@ -14,6 +14,10 @@ public class ErrorResponse {
     public static final String UNKNOWN_DESCRIPTION = "Something when wrong while processing your request";
 
     public static final ErrorResponse MONSTER_NOT_FOUND = new ErrorResponse(404, "Monster Not Found", "The requested monster could not be found in the database.");
+    public static final ErrorResponse SPELL_NOT_FOUND = new ErrorResponse(404, "Spell Not Found", "The requested spell could not be found in the database.");
+    public static final ErrorResponse SPELL_ALREADY_EXISTS = new ErrorResponse(404, "Spell Already Exists", "Failed to create spell.  One with that name already exists.");
+    public static final ErrorResponse CAMPAIGN_NOT_FOUND = new ErrorResponse(404, "Campaign Not Found", "The requested campaoign could not be found in the database.");
+    public static final ErrorResponse CAMPAIGN_ALREADY_EXISTS = new ErrorResponse(400, "Campaign Already Exists", "Failed to create campaign.  One with that name already exists.");
 
     public ErrorResponse(int statusCode) {
         this.statusCode = statusCode;
@@ -25,11 +29,36 @@ public class ErrorResponse {
         this.statusCode = statusCode;
         this.error = e.getClass().getSimpleName();
         this.description = e.getMessage();
+//        this.description = (e.getCause() != null) ? e.getCause().getMessage() : e.getMessage();
     }
 
     public ErrorResponse(int statusCode, String error, String description) {
         this.statusCode = statusCode;
         this.error = error;
+        this.description = description;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
     }
 

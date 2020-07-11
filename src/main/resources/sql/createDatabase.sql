@@ -6,7 +6,11 @@ DROP TABLE IF EXISTS saving_throws;
 DROP TABLE IF EXISTS skills;
 DROP TABLE IF EXISTS action;
 DROP TABLE IF EXISTS monster;
+DROP TABLE IF EXISTS player;
 DROP TABLE IF EXISTS spell;
+DROP TABLE IF EXISTS encounter_player;
+DROP TABLE IF EXISTS encounter_monster;
+DROP TABLE IF EXISTS encounter;
 DROP TABLE IF EXISTS campaign;
 
 CREATE TABLE `monster` (
@@ -93,7 +97,6 @@ CREATE TABLE `skills` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `spell` (
-  `spell_id` smallint NOT NULL AUTO_INCREMENT,
   `name` text NOT NULL,
   `description` text NOT NULL,
   `page` text,
@@ -108,7 +111,53 @@ CREATE TABLE `spell` (
   `school` text,
   `classes` text,
   `higher_level` text,
-  PRIMARY KEY (`spell_id`)
+  PRIMARY KEY (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1243 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `campaign` (
+  `campaign_id` smallint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL UNIQUE,
+  `create_timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`campaign_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1243 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `player` (
+  `player_id` smallint NOT NULL AUTO_INCREMENT,
+  `campaign_id` smallint NOT NULL,
+  `character_name` varchar(255) NOT NULL,
+  `player_name` varchar(255),
+  `notes` text,
+  PRIMARY KEY (`player_id`),
+  CONSTRAINT `player_ibfk_1` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`campaign_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `encounter` (
+  `encounter_id` smallint NOT NULL AUTO_INCREMENT,
+  `campaign_id` smallint NOT NULL,
+  `name` text NOT NULL,
+  `create_timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`encounter_id`),
+  CONSTRAINT `encounter_ibfk_1` FOREIGN KEY (`campaign_id`) REFERENCES `campaign` (`campaign_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=1243 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `encounter_player` (
+    `encounter_id` smallint NOT NULL,
+    `player_id` smallint NOT NULL,
+    `conditions` text,
+    `notes` text,
+    `order` smallint NOT NULL,
+    CONSTRAINT `encounter_player_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`player_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `encounter_player_ibfk_2` FOREIGN KEY (`encounter_id`) REFERENCES `encounter` (`encounter_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `encounter_monster` (
+    `encounter_id` smallint NOT NULL,
+    `name` varchar(255) NOT NULL,
+    `current_hp` smallint NOT NULL,
+    `conditions` text,
+    `notes` text,
+    `order` smallint NOT NULL,
+    CONSTRAINT `encounter_monster_ibfk_1` FOREIGN KEY (`name`) REFERENCES `monster` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT `encounter_monster_ibfk_2` FOREIGN KEY (`encounter_id`) REFERENCES `encounter` (`encounter_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 

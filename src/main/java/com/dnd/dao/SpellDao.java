@@ -26,11 +26,11 @@ public class SpellDao {
     private DataSource dataSource;
 
     private static final String INSERT_SPELL = "INSERT INTO spell(name, description, page, spell_range, components, materials, ritual, duration, concentration, casting_time, level, school, classes, higher_level) values(:name, :description, :page, :spell_range, :components, :materials, :ritual, :duration, :concentration, :casting_time, :level, :school, :classes, :higher_level);";
-    private static final String GET_SPELLS = "SELECT name, description, page, spell_range, components, materials, ritual, duration, concentration, casting_time, level, school, classes, higher_level FROM spell;";
+    private static final String GET_SPELLS = "SELECT name FROM spell;";
     private static final String GET_SPELL_BY_NAME = "SELECT name, description, page, spell_range, components, materials, ritual, duration, concentration, casting_time, level, school, classes, higher_level FROM spell WHERE name = :name;";
 
-    public List<Spell> getSpells() {
-        return jdbcTemplate.query(GET_SPELLS, new BeanPropertyRowMapper<>(Spell.class));
+    public List<String> getSpells() {
+        return jdbcTemplate.queryForList(GET_SPELLS, new HashMap<>(), String.class);
     }
 
     public Spell getSpellByName(String name) {
