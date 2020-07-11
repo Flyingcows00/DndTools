@@ -19,23 +19,17 @@ public class PlayerDao {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
-    private static final String CREATE_PLAYER = "INSERT INTO player(campaign_id, player_name, character_name) VALUES(:campaignId, :player, :character);";
-    private static final String GET_PLAYERS_BY_CAMPAIGN = "SELECT player_name, character_name, notes FROM player WHERE campaign_id = :campaignId";
+    private static final String GET_PLAYERS = "SELECT player_id, player_name FROM player";
+    private static final String CREATE_PLAYER = "INSERT INTO player(player_name) VALUES(:name);";
 
-    public List<Player> getPlayersByCampaign(String campaignId) {
-        Map<String, String> params = new HashMap<>();
-        params.put("campaignId", campaignId);
-        return jdbcTemplate.query(GET_PLAYERS_BY_CAMPAIGN, params, new BeanPropertyRowMapper<>(Player.class));
+    public List<Player> getPlayers() {
+        return jdbcTemplate.query(GET_PLAYERS, new BeanPropertyRowMapper<>(Player.class));
     }
 
-    public void createPlayer(String campaignId, Player player) {
+    public void createPlayer(String name) {
         Map<String, String> params = new HashMap<>();
-        params.put("player", player.getPlayerName());
-        params.put("character", player.getCharacterName());
-        params.put("campaignId", campaignId);
-        int rows = jdbcTemplate.update(CREATE_PLAYER, params);
-        if (rows == 0) {
-            throw new EmptyResultDataAccessException("Failed to create player with name " + player.getCharacterName(), 1);
-        }
+        params.put("name", name);
+        jdbcTemplate.update(CREATE_PLAYER, params);
     }
+
 }

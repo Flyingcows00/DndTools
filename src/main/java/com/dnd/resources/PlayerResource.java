@@ -2,6 +2,7 @@ package com.dnd.resources;
 
 import com.dnd.dao.PlayerDao;
 import com.dnd.dao.SpellDao;
+import com.dnd.model.Character;
 import com.dnd.model.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,14 +21,14 @@ public class PlayerResource {
     @Autowired
     private PlayerDao playerDao;
 
-    @GetMapping("/{campaignId}")
-    public ResponseEntity<?> getPlayersByCampaign(@PathVariable String campaignId) {
-        return ResponseEntity.ok(playerDao.getPlayersByCampaign(campaignId));
+    @GetMapping
+    public ResponseEntity<?> getPlayers() {
+        return ResponseEntity.ok(playerDao.getPlayers());
     }
 
-    @PostMapping("/{campaignId}")
-    public ResponseEntity<?> createPlayer(@PathVariable String campaignId, @RequestBody @Valid Player player) {
-        playerDao.createPlayer(campaignId, player);
+    @PostMapping
+    public ResponseEntity<?> createPlayer(@RequestBody @Valid Player player) {
+        playerDao.createPlayer(player.getPlayerName());
         return ResponseEntity.noContent().build();
     }
 

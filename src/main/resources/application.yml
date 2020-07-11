@@ -5,6 +5,8 @@ spring:
     url: jdbc:mysql://localhost:3306/dndtools?verifyServerCertificate=false&useSSL=false&requireSSL=false
     username: root
     password: root
+  jackson:
+    default-property-inclusion: non_null
 
 server:
   port: 8080

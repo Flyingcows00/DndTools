@@ -4,14 +4,25 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import java.util.List;
 
 public class Player {
 
+    @Null
+    private Integer playerId;
     @NotNull
     private String playerName;
-    @NotNull
-    private String characterName;
-    private String notes;
+    @Null
+    private List<Character> characters;
+
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
+    }
 
     public String getPlayerName() {
         return playerName;
@@ -21,20 +32,12 @@ public class Player {
         this.playerName = playerName;
     }
 
-    public String getCharacterName() {
-        return characterName;
+    public List<Character> getCharacters() {
+        return characters;
     }
 
-    public void setCharacterName(String characterName) {
-        this.characterName = characterName;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setCharacters(List<Character> characters) {
+        this.characters = characters;
     }
 
     @Override

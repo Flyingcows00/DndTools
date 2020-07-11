@@ -3247,4 +3247,44 @@ INSERT INTO `spell` VALUES
     ('Zephyr Strike','<p>You move like the wind. Until the spell ends, your movement doesn’t provoke opportunity attacks.</p><p>Once before the spell ends, you can give yourself advantage on one weapon attack roll on your turn. That attack deals an extra 1d8 force damage on a hit. Whether you hit or miss, your walking speed increases by 30 feet until the end of that turn.</p>','xge 171','Self','V','',0,'Up to 1 minute',1,'1 bonus action',1,'Transmutation','Ranger','');
 
 INSERT INTO `campaign`(name) VALUES
-    ('The Soulless')
+    ('The Soulless'),
+    ('The Soulless: Origins'),
+    ('The Riftwar');
+
+INSERT INTO `player`(player_name) VALUES
+    ('Brandon Kittle'),
+    ('Vivian Swart'),
+    ('Jeremy Maxwell'),
+    ('Brennon Larson'),
+    ('Ryan Elmore'),
+    ('Kristen Larson');
+
+INSERT INTO `character`(player_id, character_name, alive) VALUES
+    (1, 'Sir Edwin Ramirez of the Silver Crossings', true),
+    (1, 'Pen', false),
+    (2, 'Casey Turnbuckle', true),
+    (2, 'Elora Wildmoon', true),
+    (3, 'MK', true),
+    (3, 'McGregor Tenpenny', true),
+    (4, 'Alabaster Whitefeather', true),
+    (4, 'Bjorn Smaragd', true),
+    (5, 'Artros Pendragon', true),
+    (5, 'Vigil Sortitus', false),
+    (6, 'Svag Smaragd', false);
+
+INSERT INTO character_campaign(campaign_id, character_id) VALUES
+    (1, 2),
+    (1, 4),
+    (1, 6),
+    (1, 8),
+    (1, 10),
+    (1, 11),
+    (2, 1),
+    (2, 2),
+    (2, 3),
+    (2, 4),
+    (2, 5),
+    (2, 7),
+    (2, 9),
+    (2, 10),
+    (2, 11);
