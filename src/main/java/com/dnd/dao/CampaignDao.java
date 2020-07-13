@@ -1,10 +1,7 @@
 package com.dnd.dao;
 
 import com.dnd.model.Campaign;
-import com.dnd.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,8 +19,8 @@ public class CampaignDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
     private static final String CREATE_CAMPAIGN = "INSERT INTO campaign(name) VALUES(:name);";
     private static final String DELETE_CAMPAIGN = "DELETE FROM campaign WHERE name=:name";
-    private static final String GET_CAMPAIGNS = "SELECT name, create_timestamp FROM campaign;";
-    private static final String GET_CAMPAIGN = "SELECT name, create_timestamp FROM campaign WHERE name = :name;";
+    private static final String GET_CAMPAIGNS = "SELECT campaign_id, name, create_timestamp FROM campaign;";
+    private static final String GET_CAMPAIGN = "SELECT campaign_id, name, create_timestamp FROM campaign WHERE name = :name;";
 
     public List<Campaign> getCampaigns() {
         return jdbcTemplate.query(GET_CAMPAIGNS, new BeanPropertyRowMapper<>(Campaign.class));

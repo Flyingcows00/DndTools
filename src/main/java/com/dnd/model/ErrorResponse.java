@@ -16,8 +16,10 @@ public class ErrorResponse {
     public static final ErrorResponse MONSTER_NOT_FOUND = new ErrorResponse(404, "Monster Not Found", "The requested monster could not be found in the database.");
     public static final ErrorResponse SPELL_NOT_FOUND = new ErrorResponse(404, "Spell Not Found", "The requested spell could not be found in the database.");
     public static final ErrorResponse SPELL_ALREADY_EXISTS = new ErrorResponse(404, "Spell Already Exists", "Failed to create spell.  One with that name already exists.");
-    public static final ErrorResponse CAMPAIGN_NOT_FOUND = new ErrorResponse(404, "Campaign Not Found", "The requested campaoign could not be found in the database.");
+    public static final ErrorResponse CAMPAIGN_NOT_FOUND = new ErrorResponse(404, "Campaign Not Found", "The requested campaign could not be found in the database.");
     public static final ErrorResponse CAMPAIGN_ALREADY_EXISTS = new ErrorResponse(400, "Campaign Already Exists", "Failed to create campaign.  One with that name already exists.");
+    public static final ErrorResponse CAMPAIGN_REQUIRED_FIELDS = new ErrorResponse(400, "Missing Required Fields", "Failed to update campaign.  Missing one of the required fields; character_name, alive, notes.");
+    public static final ErrorResponse CHARACTER_NOT_FOUND = new ErrorResponse(404, "Character Not Found", "The requested character could not be found in the database.");
 
     public ErrorResponse(int statusCode) {
         this.statusCode = statusCode;

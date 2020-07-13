@@ -9,11 +9,9 @@ import java.util.List;
 
 public class Player {
 
-    @Null
     private Integer playerId;
-    @NotNull
+    @NotNull(message = "playerName is a required field")
     private String playerName;
-    @Null
     private List<Character> characters;
 
     public int getPlayerId() {

@@ -21,6 +21,7 @@ public class PlayerDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
     private static final String GET_PLAYERS = "SELECT player_id, player_name FROM player";
     private static final String CREATE_PLAYER = "INSERT INTO player(player_name) VALUES(:name);";
+    private static final String DELETE_PLAYER = "DELETE FROM player WHERE player_id=:playerId;";
 
     public List<Player> getPlayers() {
         return jdbcTemplate.query(GET_PLAYERS, new BeanPropertyRowMapper<>(Player.class));
@@ -30,6 +31,12 @@ public class PlayerDao {
         Map<String, String> params = new HashMap<>();
         params.put("name", name);
         jdbcTemplate.update(CREATE_PLAYER, params);
+    }
+
+    public void deletePlayer(int playerId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("playerId", playerId);
+        jdbcTemplate.update(DELETE_PLAYER, params);
     }
 
 }

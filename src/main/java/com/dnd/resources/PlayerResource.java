@@ -32,6 +32,12 @@ public class PlayerResource {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/{playerId}")
+    public ResponseEntity<?> deletePlayer(@PathVariable int playerId) {
+        playerDao.deletePlayer(playerId);
+        return ResponseEntity.noContent().build();
+    }
+
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public ResponseEntity<?> emptyResultSetExceptionHandler(EmptyResultDataAccessException exception) {
         return ResponseEntity.status(400).body("Spell not found for provided name.");

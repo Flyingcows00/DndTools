@@ -10,10 +10,19 @@ import java.sql.Timestamp;
 
 public class Campaign {
 
+    private int campaignId;
     @NotNull(message = "name is a required field")
     private String name;
     @Null(message = "createTimestamp should be left blank")
     private Timestamp createTimestamp;
+
+    public int getCampaignId() {
+        return campaignId;
+    }
+
+    public void setCampaignId(int campaignId) {
+        this.campaignId = campaignId;
+    }
 
     public String getName() {
         return name;

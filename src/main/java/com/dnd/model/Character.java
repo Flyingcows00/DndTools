@@ -13,15 +13,12 @@ import static java.util.Optional.ofNullable;
 
 public class Character {
 
-    @Null
     private int characterId;
-    @NotNull
+    private int playerId;
+    @NotNull(message = "characterName is a required field")
     private String characterName;
-    @Null
     private Boolean alive;
-    @Null
     private String notes;
-    @Null
     private List<Integer> campaignIds;
 
     public Character() {
@@ -29,7 +26,9 @@ public class Character {
 
     public Character(Character another) {
         this.characterId = another.characterId;
+        this.playerId = another.playerId;
         this.characterName = another.characterName;
+        this.alive = another.alive;
         this.notes = another.notes;
         this.campaignIds = another.campaignIds;
     }
@@ -45,6 +44,14 @@ public class Character {
 
     public void setCharacterId(int characterId) {
         this.characterId = characterId;
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(int playerId) {
+        this.playerId = playerId;
     }
 
     public String getCharacterName() {
