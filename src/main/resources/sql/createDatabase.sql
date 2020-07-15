@@ -131,7 +131,7 @@ CREATE TABLE `character` (
   `character_id` smallint NOT NULL AUTO_INCREMENT,
   `player_id` smallint NOT NULL,
   `character_name` varchar(256) NOT NULL,
-  `alive` tinyint(1) NOT NULL DEFAULT '1'
+  `alive` tinyint(1) NOT NULL DEFAULT '1',
   `notes` text,
   PRIMARY KEY (`character_id`),
   CONSTRAINT `character_ibfk_1` FOREIGN KEY (`player_id`) REFERENCES `player` (`player_id`) ON DELETE CASCADE ON UPDATE CASCADE
