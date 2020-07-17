@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,7 @@ import javax.validation.Valid;
 
 import static com.dnd.model.ErrorResponse.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @RestController
 @RequestMapping("characters")
@@ -40,23 +43,12 @@ public class CharacterResource {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{characterId}/campaign/{campaignId}")
-    public ResponseEntity<?> addCharacterToCampaign(@PathVariable int characterId, @PathVariable int campaignId) {
-        characterDao.addCharacterToCampaign(characterId, campaignId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{characterId}/campaign/{campaignId}")
-    public ResponseEntity<?> removeCharacterFromCampaign(@PathVariable int characterId, @PathVariable int campaignId) {
-        characterDao.removeCharacterFromCampaign(characterId, campaignId);
-        return ResponseEntity.noContent().build();
-    }
-
     @PatchMapping("/{characterId}")
     public ResponseEntity<?> updateCharacter(@PathVariable int characterId, @RequestBody Character character) {
-        if (character.getAlive() == null && isBlank(character.getCharacterName()) && isBlank(character.getNotes())) {
+        if (character.areAllUpdateFieldsBlank()) {
             return ResponseEntity.status(CAMPAIGN_REQUIRED_FIELDS.getStatusCode()).body(CAMPAIGN_REQUIRED_FIELDS);
         }
+        Character currentValues = characterDao.getCharacter(characterId);
         characterDao.updateCharacter(characterId, character);
         return ResponseEntity.noContent().build();
     }

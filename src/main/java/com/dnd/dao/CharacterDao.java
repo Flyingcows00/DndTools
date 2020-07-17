@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import static java.lang.String.format;
 import static java.lang.String.join;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Repository
 @Transactional
@@ -32,8 +34,8 @@ public class CharacterDao {
 
     private static final String GET_CHARACTERS = "SELECT c.character_id, c.player_id, c.character_name, c.alive, c.notes, cc.campaign_id FROM `character` c LEFT JOIN character_campaign cc on c.character_id = cc.character_id %s";
     private static final String CREATE_CHARACTER = "INSERT INTO `character`(player_id, character_name) VALUES(:playerId, :name);";
-    private static final String ADD_CHARACTER_TO_CAMPAIGN = "INSERT INTO character_campaign VALUES(:characterId, :campaignId);";
-    private static final String REMOVE_CHARACTER_FROM_CAMPAIGN = "DELETE FROM character_campaign WHERE character_id=:characterId AND campaign_id=:campaignId;";
+    private static final String ADD_CHARACTER_TO_CAMPAIGNS = "INSERT INTO character_campaign VALUES(:characterId, :campaignId);";
+    private static final String REMOVE_CHARACTER_FROM_CAMPAIGN = "DELETE FROM character_campaign WHERE character_id=:characterId;";
     private static final String UPDATE_CHARACTER = "UPDATE `character` SET %s WHERE character_id = :characterId";
     private static final String DELETE_CHARACTER = "DELETE FROM `character` WHERE character_id = :characterId";
 
@@ -74,17 +76,20 @@ public class CharacterDao {
         jdbcTemplate.update(CREATE_CHARACTER, params);
     }
 
-    public void addCharacterToCampaign(int characterId, int campaignId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("characterId", characterId);
-        params.put("campaignId", campaignId);
-        jdbcTemplate.update(ADD_CHARACTER_TO_CAMPAIGN, params);
+    private void addCharacterToCampaigns(int characterId, List<Integer> campaignIds) {
+        List<MapSqlParameterSource> parameters = new ArrayList<>();
+        campaignIds.forEach(campaignId -> {
+            Map<String, Integer> map = new HashMap<>();
+            map.put("characterId", characterId);
+            map.put("campaignId", campaignId);
+            parameters.add(new MapSqlParameterSource(map));
+        });
+        jdbcTemplate.batchUpdate(ADD_CHARACTER_TO_CAMPAIGNS, parameters.toArray(new MapSqlParameterSource[0]));
     }
 
-    public void removeCharacterFromCampaign(int characterId, int campaignId) {
+    private void removeCharacterFromAllCampaigns(int characterId) {
         Map<String, Object> params = new HashMap<>();
         params.put("characterId", characterId);
-        params.put("campaignId", campaignId);
         jdbcTemplate.update(REMOVE_CHARACTER_FROM_CAMPAIGN, params);
     }
 
@@ -101,7 +106,16 @@ public class CharacterDao {
         if (character.getAlive() != null) {
             setters.add(format("alive=%b", character.getAlive()));
         }
-        jdbcTemplate.update(format(UPDATE_CHARACTER, join(",", setters)), params);
+        if (character.getPlayerId() > 0) {
+            setters.add(format("player_id='%s'", character.getPlayerId()));
+        }
+        if (!setters.isEmpty()) {
+            jdbcTemplate.update(format(UPDATE_CHARACTER, join(",", setters)), params);
+        }
+        if (!isEmpty(character.getCampaignIds())) {
+            removeCharacterFromAllCampaigns(characterId);
+            addCharacterToCampaigns(characterId, character.getCampaignIds());
+        }
     }
 
     public void deleteCharacter(int characterId) {

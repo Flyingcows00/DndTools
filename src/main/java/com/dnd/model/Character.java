@@ -1,7 +1,9 @@
 package com.dnd.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.util.CollectionUtils;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
@@ -10,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.springframework.util.CollectionUtils.isEmpty;
 
 public class Character {
 
@@ -89,6 +93,10 @@ public class Character {
     public void setCampaignId(Integer campaignId) {
         this.campaignIds = new ArrayList<>();
         this.campaignIds.add(campaignId);
+    }
+
+    public boolean areAllUpdateFieldsBlank() {
+        return (this.playerId <= 0 && this.alive == null && isBlank(this.notes) && isBlank(this.characterName) && isEmpty(this.campaignIds));
     }
 
     @Override
